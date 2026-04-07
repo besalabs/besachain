@@ -1,0 +1,240 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# Folders
+_obj
+_test
+vendor/
+dist/
+build/
+bin/
+
+# Architecture specific extensions/prefixes
+*.[568vq]
+[568vq].out
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+_testmain.go
+*.exe
+*.test
+*.prof
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+Godeps/
+
+# IDE specific files
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+*.sublime-*
+.project
+.classpath
+.settings/
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.cover
+*.coverage
+.nyc_output
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.yarn-integrity
+.env
+.env.local
+.env.*.local
+
+# Smart contract development
+# Hardhat
+artifacts/
+cache/
+typechain/
+typechain-types/
+
+# Foundry
+out/
+cache_forge/
+broadcast/
+
+# Truffle
+build/
+
+# Contract ABIs (generated)
+abis/generated/
+
+# Testing
+test-results/
+playwright-report/
+
+# Blockchain data
+chaindata/
+nodes/
+ethash/
+*.ldb
+*.log
+LOG
+CURRENT
+LOCK
+MANIFEST-*
+
+# Keystore files - NEVER commit real keys
+keystore/
+*.keystore
+keystore-*/
+
+# Config files with secrets
+config/secrets.*
+config/*.secret
+config/local-*
+
+# Genesis files with real validator addresses
+# (Template genesis files are OK, real ones go to private repo)
+genesis/mainnet/genesis.json
+genesis/testnet/genesis-real.json
+
+# Deployment scripts with sensitive data
+scripts/deploy/local-*
+scripts/deploy/secrets.*
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+*.tfplan
+
+# Kubernetes secrets
+*secret*.yaml
+*secret*.yml
+*.secret.yaml
+*.secret.yml
+
+# AWS
+.aws/
+*.pem
+
+# Certificates
+*.crt
+*.key
+*.csr
+*.pem
+!test/fixtures/**/*.pem
+
+# Documentation build
+docs/_build/
+docs/.docusaurus/
+docs/.cache/
+docs/node_modules/
+
+# SDK build outputs
+sdk/**/dist/
+sdk/**/lib/
+sdk/**/build/
+sdk/**/*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Local development
+docker-compose.override.yml
+.docker/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Minified files
+*.min.js
+*.min.css
+
+# Generated documentation
+docs/api/generated/
+
+# CI/CD local
+.github/workflows/local-*
+
+# Misc
+*.iml
+*.ipr
+*.iws
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/

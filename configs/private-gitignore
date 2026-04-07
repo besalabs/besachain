@@ -1,0 +1,285 @@
+# ============================================
+# BESACHAIN SECRETS - ENHANCED SECURITY
+# ============================================
+# This .gitignore ensures NO sensitive files are committed unencrypted
+# Use git-crypt or sops for files that need to be in git
+
+# ============================================
+# ABSOLUTELY NEVER COMMIT (even encrypted)
+# ============================================
+
+# Raw private keys (unencrypted)
+*.key
+*.priv
+*.private
+*private*
+*secret*key*
+
+# Mnemonic phrases
+*.mnemonic
+*.seed
+mnemonic.txt
+seed.txt
+
+# Password files
+*.password
+*.pass
+passwords.txt
+
+# Unencrypted keystore files
+keystore/
+*.keystore
+keystore-*/
+
+# Hardware wallet backups
+*ledger*
+*trezor*
+*hw-wallet*
+
+# ============================================
+# INFRASTRUCTURE SECRETS
+# ============================================
+
+# Terraform state (contains sensitive data)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Terraform variables with secrets
+*.tfvars
+*.auto.tfvars
+!example.tfvars
+!example.auto.tfvars
+
+# Ansible vault passwords
+.vault_pass
+.vault-password
+.vault_password_file
+
+# Ansible sensitive files
+*vault.yml
+*vault.yaml
+*secrets.yml
+*secrets.yaml
+group_vars/*/vault*
+host_vars/*/vault*
+
+# Kubernetes secrets
+*secret*.yaml
+*secret*.yml
+*secret*.json
+secrets/
+kubeconfig*
+.kube/
+
+# AWS credentials
+.aws/
+aws-credentials*
+*.pem
+
+# SSH keys
+.ssh/
+*.pem
+id_rsa
+id_rsa.pub
+id_dsa
+id_dsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Cloud provider credentials
+gcp-credentials.json
+azure-credentials.json
+service-account*.json
+
+# Docker registry credentials
+docker-config.json
+.config/docker/
+
+# ============================================
+# APPLICATION SECRETS
+# ============================================
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+.envrc
+
+# Configuration files with secrets
+config/secrets.*
+config/*.secret
+config/local-*
+config/production-*
+config/staging-*
+
+# Database credentials
+database.yml
+*.db
+*.sqlite
+*.sqlite3
+
+# API keys and tokens
+api-keys/
+*api-key*
+*apikey*
+*api_token*
+*access_token*
+*refresh_token*
+*auth_token*
+
+# Webhook secrets
+*webhook*secret*
+
+# ============================================
+# VALIDATOR SPECIFIC
+# ============================================
+
+# Validator keys (must use HSM or encrypted storage)
+validators/*/
+!validators/.gitkeep
+!validators/README.md
+!validators/*/README.md
+
+# Validator passwords
+validator-password*
+*validator*pass*
+
+# Node data (if synced)
+node/
+chaindata/
+nodes/
+ethash/
+
+# ============================================
+# CERTIFICATES AND CRYPTO
+# ============================================
+
+# SSL/TLS certificates
+*.crt
+*.key
+*.csr
+*.pem
+!ca-certificates/
+!test/fixtures/**/*.pem
+
+# Certificate Authority files
+*.ca
+*.ca-bundle
+
+# PGP keys
+*.gpg
+*.pgp
+*.asc
+secring.*
+
+# ============================================
+# LOGS AND MONITORING
+# ============================================
+
+# Log files
+*.log
+logs/
+log/
+
+# Audit logs (keep these secure!)
+audit/
+audit-logs/
+
+# Monitoring credentials
+grafana-credentials*
+prometheus-credentials*
+
+# ============================================
+# BACKUP FILES
+# ============================================
+
+# Backup files
+*.bak
+*.backup
+*~
+*.old
+*.orig
+
+# Archive files
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+# Dump files
+*.dump
+*.sql
+*.sql.gz
+
+# ============================================
+# DEVELOPMENT
+# ============================================
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ============================================
+# EXCEPTIONS - FILES THAT CAN BE COMMITTED
+# ============================================
+
+# Keep these directories with .gitkeep
+!.gitkeep
+!keys/.gitkeep
+!genesis/.gitkeep
+!infra/.gitkeep
+!validators/.gitkeep
+
+# Example/template files are OK
+!*.example
+!*.template
+!*.sample
+!example.*
+!template.*
+!sample.*
+
+# Documentation
+!docs/
+!runbooks/
+!policies/
+
+# Scripts (that don't contain secrets)
+!scripts/
+!*.sh
+
+# Encrypted files (managed by git-crypt)
+# These patterns should match files that git-crypt handles
+*.key.gpg
+*.secret.gpg
+
+# ============================================
+# SECURITY REMINDERS
+# ============================================
+# 
+# 1. ALWAYS use `git-crypt lock` before pushing
+# 2. NEVER commit unencrypted secrets
+# 3. Use `git-crypt status` to check encryption
+# 4. Rotate keys quarterly
+# 5. Report any suspected leak immediately
+#
+# ============================================

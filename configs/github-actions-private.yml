@@ -1,0 +1,398 @@
+name: BesaChain Secrets - Deployment Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'genesis/**'
+      - 'infra/**'
+      - 'validators/**'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'testnet'
+        type: choice
+        options:
+          - testnet
+          - mainnet
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - deploy
+          - rotate-keys
+          - validate
+          - backup
+
+env:
+  AWS_REGION: us-east-1
+  TF_VERSION: '1.6.0'
+
+jobs:
+  # ============================================================================
+  # Validation Jobs
+  # ============================================================================
+  validate-secrets:
+    name: Validate Secrets Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check directory structure
+        run: |
+          echo "Validating secrets directory structure..."
+          [ -d "keys" ] || (echo "Missing keys/ directory" && exit 1)
+          [ -d "genesis" ] || (echo "Missing genesis/ directory" && exit 1)
+          [ -d "infra" ] || (echo "Missing infra/ directory" && exit 1)
+          [ -d "validators" ] || (echo "Missing validators/ directory" && exit 1)
+          echo "✓ Directory structure valid"
+      
+      - name: Validate genesis files
+        run: |
+          for network in mainnet testnet devnet; do
+            if [ -f "genesis/$network/genesis.json" ]; then
+              echo "Validating $network genesis..."
+              jq empty genesis/$network/genesis.json || (echo "Invalid JSON in $network genesis" && exit 1)
+              [ $(jq -r '.config.chainId' genesis/$network/genesis.json) != "null" ] || (echo "Missing chainId in $network genesis" && exit 1)
+            fi
+          done
+          echo "✓ Genesis files valid"
+      
+      - name: Check for unencrypted secrets
+        run: |
+          # Look for patterns that suggest unencrypted private keys
+          if grep -r "0x[0-9a-fA-F]\{64\}" --include="*.json" --include="*.txt" . 2>/dev/null; then
+            echo "⚠️ Warning: Potential unencrypted private keys found"
+            exit 1
+          fi
+          echo "✓ No obvious unencrypted secrets detected"
+
+  validate-terraform:
+    name: Validate Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Terraform Format Check
+        run: |
+          cd infra/terraform
+          terraform fmt -check -recursive
+      
+      - name: Terraform Validate
+        run: |
+          cd infra/terraform
+          terraform init -backend=false
+          terraform validate
+
+  # ============================================================================
+  # Security Scans
+  # ============================================================================
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Scan for secrets with git-leaks
+        uses: zricethezav/gitleaks-action@v2
+        with:
+          config-path: .gitleaks.toml
+      
+      - name: Check for hardcoded credentials
+        run: |
+          # Patterns to check for
+          patterns=(
+            "AKIA[0-9A-Z]{16}"  # AWS Access Key ID
+            "[0-9a-zA-Z/+]{40}" # AWS Secret Key pattern
+            "ghp_[0-9a-zA-Z]{36}" # GitHub Personal Access Token
+            "glpat-[0-9a-zA-Z-]{20}" # GitLab PAT
+          )
+          
+          for pattern in "${patterns[@]}"; do
+            if grep -rE "$pattern" --include="*.json" --include="*.yaml" --include="*.yml" --include="*.tf" --include="*.sh" . 2>/dev/null; then
+              echo "⚠️ Potential hardcoded credential found matching: $pattern"
+              exit 1
+            fi
+          done
+          echo "✓ No hardcoded credentials detected"
+
+  # ============================================================================
+  # Deployment Jobs
+  # ============================================================================
+  deploy-testnet:
+    name: Deploy to Testnet
+    runs-on: ubuntu-latest
+    needs: [validate-secrets, validate-terraform, security-scan]
+    if: github.ref == 'refs/heads/main' && (github.event.inputs.environment == 'testnet' || github.event.inputs.environment == null)
+    environment:
+      name: testnet
+      url: https://testnet-explorer.besachain.io
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Terraform Init
+        run: |
+          cd infra/terraform/testnet
+          terraform init
+      
+      - name: Terraform Plan
+        run: |
+          cd infra/terraform/testnet
+          terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        run: |
+          cd infra/terraform/testnet
+          terraform apply -auto-approve tfplan
+      
+      - name: Deploy Validator Configs
+        run: |
+          # Upload validator configurations to S3 (encrypted)
+          aws s3 sync validators/testnet/ s3://besachain-testnet-secrets/validators/ \
+            --sse aws:kms \
+            --sse-kms-key-id alias/besachain-testnet-key
+      
+      - name: Update Genesis
+        run: |
+          # Upload genesis to S3
+          aws s3 cp genesis/testnet/genesis.json s3://besachain-testnet-secrets/genesis/ \
+            --sse aws:kms \
+            --sse-kms-key-id alias/besachain-testnet-key
+      
+      - name: Notify Deployment
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "✅ Testnet deployment completed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*BesaChain Testnet Deployment*\n\nStatus: ✅ Successful\nCommit: ${{ github.sha }}\nBy: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy-mainnet:
+    name: Deploy to Mainnet
+    runs-on: ubuntu-latest
+    needs: [validate-secrets, validate-terraform, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event.inputs.environment == 'mainnet'
+    environment:
+      name: mainnet
+      url: https://explorer.besachain.io
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Require manual approval check
+        run: |
+          echo "⚠️ Mainnet deployment requires manual approval"
+          echo "Reviewers must approve this deployment"
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Terraform Init
+        run: |
+          cd infra/terraform/mainnet
+          terraform init
+      
+      - name: Terraform Plan
+        run: |
+          cd infra/terraform/mainnet
+          terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        run: |
+          cd infra/terraform/mainnet
+          terraform apply -auto-approve tfplan
+      
+      - name: Deploy Validator Configs
+        run: |
+          aws s3 sync validators/mainnet/ s3://besachain-mainnet-secrets/validators/ \
+            --sse aws:kms \
+            --sse-kms-key-id alias/besachain-mainnet-key
+      
+      - name: Update Genesis
+        run: |
+          aws s3 cp genesis/mainnet/genesis.json s3://besachain-mainnet-secrets/genesis/ \
+            --sse aws:kms \
+            --sse-kms-key-id alias/besachain-mainnet-key
+      
+      - name: Notify Deployment
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "🚀 Mainnet deployment completed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*BesaChain Mainnet Deployment*\n\nStatus: 🚀 Successful\nCommit: ${{ github.sha }}\nBy: ${{ github.actor }}\n\n*⚠️ Monitor network health closely*"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ============================================================================
+  # Key Rotation Job
+  # ============================================================================
+  rotate-keys:
+    name: Rotate Validator Keys
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'rotate-keys'
+    environment:
+      name: ${{ github.event.inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup key generation tools
+        run: |
+          # Install BesaChain key generation tool
+          wget https://github.com/skacaniku/besachain/releases/latest/download/besachain-keytool-linux-amd64
+          chmod +x besachain-keytool-linux-amd64
+          sudo mv besachain-keytool-linux-amd64 /usr/local/bin/besachain-keytool
+      
+      - name: Generate new keys
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          ./scripts/rotate-validator-keys.sh --environment $ENVIRONMENT --batch-size 5
+      
+      - name: Backup old keys
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          aws s3 sync validators/$ENVIRONMENT/ s3://besachain-backup-$ENVIRONMENT/validators-$TIMESTAMP/ \
+            --sse aws:kms
+      
+      - name: Deploy new keys
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          aws s3 sync validators/$ENVIRONMENT/ s3://besachain-$ENVIRONMENT-secrets/validators/ \
+            --sse aws:kms
+      
+      - name: Create rotation report
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          echo "# Key Rotation Report - $(date)" > rotation-report.md
+          echo "" >> rotation-report.md
+          echo "Environment: $ENVIRONMENT" >> rotation-report.md
+          echo "Rotated by: ${{ github.actor }}" >> rotation-report.md
+          echo "Commit: ${{ github.sha }}" >> rotation-report.md
+      
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: key-rotation-report
+          path: rotation-report.md
+
+  # ============================================================================
+  # Backup Job
+  # ============================================================================
+  backup-secrets:
+    name: Backup Secrets
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'backup'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Create backup
+        run: |
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          BACKUP_BUCKET="s3://besachain-secrets-backup-$TIMESTAMP"
+          
+          # Backup all secrets
+          aws s3 sync . $BACKUP_BUCKET \
+            --exclude=".git/*" \
+            --exclude=".github/*" \
+            --sse aws:kms
+          
+          echo "Backup completed: $BACKUP_BUCKET"
+      
+      - name: Verify backup
+        run: |
+          # List backup contents
+          aws s3 ls $BACKUP_BUCKET --recursive | head -20
+
+  # ============================================================================
+  # Notification Jobs
+  # ============================================================================
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: [deploy-testnet, deploy-mainnet, rotate-keys]
+    if: failure()
+    steps:
+      - name: Send failure notification
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "❌ BesaChain deployment failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*BesaChain Deployment Failed*\n\nStatus: ❌ Failed\nWorkflow: ${{ github.workflow }}\nRun: ${{ github.run_id }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
