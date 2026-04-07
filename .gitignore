@@ -238,3 +238,4 @@ docs/api/generated/
 .serverless/
 .fusebox/
 .dynamodb/
+secrets/
