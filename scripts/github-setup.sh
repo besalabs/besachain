@@ -5,8 +5,8 @@
 set -e
 
 # Configuration
-# Get token from environment or git credentials
-GITHUB_TOKEN="${GITHUB_TOKEN:-$(grep -o 'ghp_[a-zA-Z0-9]\{36\}' ~/.git-credentials 2>/dev/null || grep -o 'gho_[a-zA-Z0-9]\{36\}' ~/.git-credentials 2>/dev/null || echo '')}"
+# Get token from environment or git credentials (supports ghp_*, gho_*, github_pat_*)
+GITHUB_TOKEN="${GITHUB_TOKEN:-$(grep -oE '(ghp_[a-zA-Z0-9]{36}|gho_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{22,})' ~/.git-credentials 2>/dev/null | head -1 || echo '')}"
 
 if [ -z "$GITHUB_TOKEN" ]; then
     echo -e "${RED}Error: GitHub token not found${NC}"
