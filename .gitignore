@@ -240,3 +240,11 @@ docs/api/generated/
 .dynamodb/
 secrets/
 deploy/validator-keys/
+
+# Large forked repos (clone from source)
+bsc/
+opbnb/
+opbnb-geth/
+
+# Build artifacts
+build/

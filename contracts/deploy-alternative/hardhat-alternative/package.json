@@ -1,0 +1,22 @@
+{
+  "name": "besachain-l1-deploy",
+  "version": "1.0.0",
+  "description": "Alternative L1 contract deployment using Hardhat with pre-built artifacts",
+  "main": "deploy.js",
+  "scripts": {
+    "deploy": "hardhat run deploy.js --network besachain",
+    "deploy:local": "hardhat run deploy.js --network localhost",
+    "test": "hardhat test"
+  },
+  "dependencies": {
+    "@eth-optimism/contracts-bedrock": "0.17.3",
+    "@eth-optimism/contracts-ts": "0.17.2",
+    "ethers": "^6.9.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.4",
+    "dotenv": "^16.3.1"
+  }
+}

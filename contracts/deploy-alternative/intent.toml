@@ -1,0 +1,43 @@
+# BesaChain L1 Contract Deployment Intent
+# Generated for 250ms L2 block time with 450ms L1
+
+[l1]
+chainID = 1444
+rpcURL = "http://54.235.85.175:1444"
+
+# Deployer private key (0x7447651c2c66E93356F22c40101ea629a03AE6f2)
+privateKey = "0xabf64eef6431a04411978c81f7caa18eb582264536b6f73953ee06071cf19f52"
+
+[superchain]
+# Use official OP Stack v6.0.0 artifacts
+artifacts = "tag://op-contracts/v6.0.0"
+
+[l2]
+# L2 Chain configuration
+chainID = 1445
+blockTime = 1  # 1 second in config (will be 250ms with Fourier upgrade)
+gasLimit = 1000000000  # 1B gas
+
+# Enable 250ms block time with Fourier upgrade
+fourierTime = 0
+
+# Genesis timestamp (must match L1)
+genesisTime = 1775599175
+
+# Sequencer configuration
+sequencer = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+
+[roles]
+# All roles use the deployer address
+proxyAdminOwner = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+protocolOwner = "0x7447651c2c66E93356F22c40101ea629a3AE6f2"
+guardian = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+batcher = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+proposer = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+challenger = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+
+[fee]
+# Fee configuration
+baseFeeVaultRecipient = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+l1FeeVaultRecipient = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+sequencerFeeVaultRecipient = "0x7447651c2c66E93356F22c40101ea629a03AE6f2"

@@ -1,0 +1,26 @@
+{
+  "l1ChainID": 1444,
+  "superchain": {
+    "artifacts": "tag://op-contracts/v6.0.0"
+  },
+  "chains": [
+    {
+      "id": "besachain-l2",
+      "chainID": 1445,
+      "deployConfig": {
+        "l2BlockTime": 1,
+        "l2GenesisBlockGasLimit": "0x3B9ACA00",
+        "l2GenesisRegolithTimeOffset": "0x0",
+        "fourierTime": 0
+      },
+      "roles": {
+        "proxyAdminOwner": "0x7447651c2c66E93356F22c40101ea629a03AE6f2",
+        "protocolOwner": "0x7447651c2c66E93356F22c40101ea629a03AE6f2",
+        "guardian": "0x7447651c2c66E93356F22c40101ea629a03AE6f2",
+        "batcher": "0x7447651c2c66E93356F22c40101ea629a03AE6f2",
+        "proposer": "0x7447651c2c66E93356F22c40101ea629a03AE6f2",
+        "challenger": "0x7447651c2c66E93356F22c40101ea629a03AE6f2"
+      }
+    }
+  ]
+}

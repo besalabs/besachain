@@ -1,0 +1,90 @@
+# OP Deployer Intent Configuration for BesaChain
+# Copy this file to intent.toml and customize for your deployment
+
+# L1 chain configuration
+l1_chain_id = 1444
+
+# Whether the chain uses custom gas token
+custom_gas_token = false
+
+# Artifacts locator - uses pre-built artifacts from GCS
+# This avoids the need to build contracts from source!
+# Options:
+#   - tag://op-contracts/v6.0.0 (recommended - pre-built)
+#   - tag://op-contracts/v1.8.0 (older stable)
+#   - file:///path/to/local/artifacts (if you have local build)
+#   - https://example.com/artifacts.tar.gz (custom URL)
+l1_contracts_locator = "tag://op-contracts/v6.0.0"
+l2_contracts_locator = "tag://op-contracts/v6.0.0"
+
+# Chain configurations
+[[chains]]
+# L2 chain ID
+chain_id = 1445
+
+# Block time in seconds (0.25s for 250ms blocks, 1s for 1s blocks)
+block_time = 1
+
+# Finalization period in seconds (2 seconds for fast finality)
+finalization_period = 2
+
+# Output oracle submission interval (in blocks)
+submission_interval = 10
+
+# L2 block gas limit
+gas_limit = 100000000
+
+# Starting block number for L2 output oracle
+starting_block_number = 0
+
+# Starting timestamp (0 = use current time)
+starting_timestamp = 0
+
+# ============================================
+# CRITICAL: Update these addresses for BesaChain
+# ============================================
+
+# Admin/Owner addresses
+l1_proxy_admin_owner = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+l2_proxy_admin_owner = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+system_config_owner = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+
+# Sequencer/Operator addresses
+unsafe_block_signer = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+batcher = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+proposer = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+challenger = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+
+# Fee recipient addresses
+base_fee_vault_recipient = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+l1_fee_vault_recipient = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+sequencer_fee_vault_recipient = "0x9322Ae3D3F43bEcDE4aCAfb4a216Aa7FBBA22604"
+
+# ============================================
+# Optional: Advanced Configuration
+# ============================================
+
+# EIP-1559 configuration
+base_fee_scalar = 0
+blob_base_fee_scalar = 0
+
+# Dispute game configuration (for fault proofs)
+# dispute_game_type = "cannon"
+# dispute_game_finality_delay = 0
+
+# Preinstall contracts
+preinstall_derivative_sbtc = false
+
+# Standard configuration
+eip_1559_denominator = 50
+eip_1559_elasticity = 10
+
+[chains.roles]
+# Alternative way to specify roles (if using dedicated accounts)
+# l1_proxy_admin_owner = "0x..."
+# l2_proxy_admin_owner = "0x..."
+# system_config_owner = "0x..."
+# unsafe_block_signer = "0x..."
+# batcher = "0x..."
+# proposer = "0x..."
+# challenger = "0x..."
