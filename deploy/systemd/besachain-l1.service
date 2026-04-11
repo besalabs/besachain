@@ -1,0 +1,38 @@
+[Unit]
+Description=BesaChain L1 Validator (Fermi, chain 14440)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ec2-user
+ExecStart=/usr/local/bin/besachain-geth \
+  --datadir /data/besachain-l1 \
+  --networkid 14440 \
+  --port 31444 \
+  --http \
+  --http.addr 0.0.0.0 \
+  --http.port 1444 \
+  --http.api eth,net,web3,txpool,parlia,debug,admin \
+  --http.corsdomain "*" \
+  --http.vhosts "*" \
+  --ws \
+  --ws.addr 0.0.0.0 \
+  --ws.port 14444 \
+  --ws.api eth,net,web3 \
+  --metrics \
+  --metrics.addr 0.0.0.0 \
+  --metrics.port 14440 \
+  --syncmode full \
+  --gcmode archive \
+  --mine \
+  --unlock VALIDATOR_ADDRESS_PLACEHOLDER \
+  --password /data/besachain-l1/password.txt \
+  --allow-insecure-unlock \
+  --verbosity 3
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

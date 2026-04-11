@@ -1,0 +1,12 @@
+# BesaChain Validator Configuration Template
+# Copy this to validators.conf and fill in the validator addresses
+# These addresses should match the addresses used in the genesis file
+
+# V1 validator address (L1 validator + L2 sequencer, 54.235.85.175)
+v1_address=0x
+
+# V2 validator address (L1 validator, 44.223.91.64)
+v2_address=0x
+
+# V3 validator address (L1 validator, 3.84.251.178)
+v3_address=0x

@@ -1,0 +1,32 @@
+[Unit]
+Description=BesaChain L2 Execution (Fourier, chain 19120)
+After=besachain-l1.service
+
+[Service]
+Type=simple
+User=ec2-user
+ExecStart=/usr/local/bin/besachain-l2-geth \
+  --datadir /data/besachain-l2 \
+  --networkid 19120 \
+  --port 31912 \
+  --http \
+  --http.addr 0.0.0.0 \
+  --http.port 1912 \
+  --http.api eth,net,web3,txpool,debug \
+  --http.corsdomain "*" \
+  --ws \
+  --ws.addr 0.0.0.0 \
+  --ws.port 19120 \
+  --ws.api eth,net,web3 \
+  --metrics \
+  --metrics.addr 0.0.0.0 \
+  --metrics.port 19121 \
+  --syncmode full \
+  --gcmode archive \
+  --rollup.sequencerhttp http://localhost:1912 \
+  --verbosity 3
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+[Unit]
+Description=BesaChain L2 Consensus (op-node, Fourier)
+After=besachain-l2-geth.service
+
+[Service]
+Type=simple
+User=ec2-user
+ExecStart=/usr/local/bin/besachain-op-node \
+  --l1 http://localhost:1444 \
+  --l2 http://localhost:1912 \
+  --rollup.config /data/besachain-l2/rollup.json \
+  --sequencer.enabled \
+  --sequencer.l1-confs 0 \
+  --p2p.disable \
+  --rpc.addr 0.0.0.0 \
+  --rpc.port 19122 \
+  --metrics.enabled \
+  --metrics.addr 0.0.0.0 \
+  --metrics.port 19123
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
