@@ -1,0 +1,147 @@
+version: '3.8'
+
+# Fixed Docker Compose for BesaChain OP Node
+# Addresses the "403 Forbidden: invalid host specified" error
+#
+# CHANGES:
+# - Uses Docker bridge IP (172.17.0.1) instead of host.docker.internal
+# - Configures L1/L2 endpoints for cross-container communication
+# - Adds extra_hosts mapping for compatibility
+
+services:
+  op-node:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.10.3
+    container_name: besachain-op-node
+    restart: unless-stopped
+    environment:
+      # Use Docker bridge IP for host access (not host.docker.internal)
+      - OP_NODE_L1_ETH_RPC=http://172.17.0.1:8545
+      - OP_NODE_L2_ENGINE_RPC=http://172.20.0.3:9551
+      - OP_NODE_RPC_ADDR=0.0.0.0
+      - OP_NODE_RPC_PORT=9545
+      - OP_NODE_ROLLUP_CONFIG=/config/rollup.json
+      - OP_NODE_JWT_SECRET=/config/jwt-secret.txt
+      - OP_NODE_SEQUENCER_ENABLED=true
+      - OP_NODE_SEQUENCER_L1_CONFS=0
+      - OP_NODE_P2P_DISABLED=true
+      - OP_NODE_METRICS_ENABLED=true
+      - OP_NODE_METRICS_ADDR=0.0.0.0
+      - OP_NODE_METRICS_PORT=7300
+      - OP_NODE_RPC_ADMIN_ENABLED=true
+      - OP_NODE_RPC_ADMIN_ADDR=0.0.0.0
+      - OP_NODE_RPC_ADMIN_PORT=9645
+      - OP_NODE_VERIFIER_L1_CONFS=0
+      - OP_NODE_PLASMA_ENABLED=false
+    volumes:
+      - /data/besachain-op-node/config:/config:ro
+      - /data/besachain-op-node/data:/data
+    ports:
+      - "9545:9545"    # L2 RPC HTTP
+      - "9645:9645"    # Admin RPC
+      - "7300:7300"    # Metrics
+    extra_hosts:
+      # Map host.docker.internal to Docker bridge IP for compatibility
+      - "host.docker.internal:172.17.0.1"
+      - "localhost:172.17.0.1"
+    command: >
+      op-node
+      --l1=http://172.17.0.1:8545
+      --l2=http://besachain-l2:9551
+      --rollup.config=/config/rollup.json
+      --rpc.addr=0.0.0.0
+      --rpc.port=9545
+      --rpc.admin=true
+      --rpc.admin-addr=0.0.0.0
+      --rpc.admin-port=9645
+      --sequencer.enabled
+      --sequencer.l1-confs=0
+      --p2p.disabled
+      --metrics.enabled
+      --metrics.addr=0.0.0.0
+      --metrics.port=7300
+      --authrpc.addr=0.0.0.0
+      --authrpc.port=9551
+      --authrpc.jwt-secret=/config/jwt-secret.txt
+      --plasma.enabled=false
+      --verifier.l1-confs=0
+      --l1-trust-rpc
+      --l1.rpckind=basic
+      --l1.http-poll-interval=500ms
+      --l1.epoch-poll-interval=500ms
+    networks:
+      besachain-network:
+        ipv4_address: 172.20.0.2
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:9545/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - besachain-l2
+
+  # L2 Geth (op-geth) - runs in same compose network
+  besachain-l2:
+    image: ghcr.io/bnb-chain/op-geth:latest
+    container_name: besachain-l2
+    restart: unless-stopped
+    environment:
+      - GETH_DATADIR=/data
+      - GETH_NETWORKID=1445
+      - GETH_AUTHRPC_ADDR=0.0.0.0
+      - GETH_AUTHRPC_PORT=9551
+      - GETH_AUTHRPC_JWTSECRET=/config/jwt-secret.txt
+      - GETH_HTTP_ADDR=0.0.0.0
+      - GETH_HTTP_PORT=9551
+      - GETH_HTTP_API=eth,net,web3,engine
+      - GETH_HTTP_VHOSTS=*
+      - GETH_HTTP_CORSDOMAIN=*
+      - GETH_WS_ADDR=0.0.0.0
+      - GETH_WS_PORT=9552
+      - GETH_WS_API=eth,net,web3
+    volumes:
+      - /data/besachain-op-node/config:/config:ro
+      - /data/besachain-l2:/data
+    ports:
+      - "9551:9551"    # L2 Engine/RPC
+      - "9552:9552"    # WebSocket
+    command: >
+      --datadir=/data
+      --networkid=1445
+      --authrpc.addr=0.0.0.0
+      --authrpc.port=9551
+      --authrpc.vhosts=*
+      --authrpc.jwt-secret=/config/jwt-secret.txt
+      --http
+      --http.addr=0.0.0.0
+      --http.port=9551
+      --http.api=eth,net,web3,engine
+      --http.vhosts=*
+      --http.corsdomain=*
+      --ws
+      --ws.addr=0.0.0.0
+      --ws.port=9552
+      --ws.api=eth,net,web3
+      --ws.origins=*
+      --rollup.sequencerhttp=
+    networks:
+      besachain-network:
+        ipv4_address: 172.20.0.3
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:9551/healthz || echo '{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}' | nc localhost 9551 | grep -q 0x5a5"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  besachain-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+volumes:
+  op-node-data:
+    driver: local

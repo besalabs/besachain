@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  op-node:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.10.3
+    container_name: besachain-op-node
+    restart: unless-stopped
+    environment:
+      - OP_NODE_L1_ETH_RPC=http://host.docker.internal:8545
+      - OP_NODE_L2_ENGINE_RPC=http://host.docker.internal:9551
+      - OP_NODE_RPC_ADDR=0.0.0.0
+      - OP_NODE_RPC_PORT=9545
+      - OP_NODE_ROLLUP_CONFIG=/config/rollup.json
+      - OP_NODE_JWT_SECRET=/config/jwt-secret.txt
+      - OP_NODE_SEQUENCER_ENABLED=true
+      - OP_NODE_SEQUENCER_L1_CONFS=0
+      - OP_NODE_P2P_DISABLED=true
+      - OP_NODE_METRICS_ENABLED=true
+      - OP_NODE_METRICS_ADDR=0.0.0.0
+      - OP_NODE_METRICS_PORT=7300
+      - OP_NODE_RPC_ADMIN_ENABLED=true
+      - OP_NODE_RPC_ADMIN_ADDR=0.0.0.0
+      - OP_NODE_RPC_ADMIN_PORT=9645
+      - OP_NODE_VERIFIER_L1_CONFS=0
+      - OP_NODE_PLASMA_ENABLED=false
+    volumes:
+      - ./config:/config:ro
+      - ./data:/data
+    ports:
+      - "9545:9545"    # L2 RPC HTTP
+      - "9645:9645"    # Admin RPC
+      - "7300:7300"    # Metrics
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: >
+      op-node
+      --l1=http://host.docker.internal:8545
+      --l2=http://host.docker.internal:9551
+      --rollup.config=/config/rollup.json
+      --rpc.addr=0.0.0.0
+      --rpc.port=9545
+      --rpc.admin=true
+      --rpc.admin-addr=0.0.0.0
+      --rpc.admin-port=9645
+      --sequencer.enabled
+      --sequencer.l1-confs=0
+      --p2p.disabled
+      --metrics.enabled
+      --metrics.addr=0.0.0.0
+      --metrics.port=7300
+      --authrpc.addr=0.0.0.0
+      --authrpc.port=9551
+      --authrpc.jwt-secret=/config/jwt-secret.txt
+      --plasma.enabled=false
+      --verifier.l1-confs=0
+      --l1-trust-rpc
+      --l1.rpckind=basic
+    networks:
+      - besachain-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:9545/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  besachain-network:
+    external: true
+    name: besachain-network

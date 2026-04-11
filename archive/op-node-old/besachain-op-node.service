@@ -1,0 +1,52 @@
+[Unit]
+Description=BesaChain OP Node Sequencer (L2 Chain 1445)
+After=network.target besachain-l1.service besachain-l2.service
+Requires=besachain-l2.service
+
+[Service]
+Type=simple
+User=besachain
+Group=besachain
+WorkingDirectory=/data/besachain-op-node
+
+# Environment variables
+Environment="OP_NODE_L1_ETH_RPC=http://localhost:8545"
+Environment="OP_NODE_L2_ENGINE_RPC=http://localhost:9551"
+Environment="OP_NODE_ROLLUP_CONFIG=/data/besachain-op-node/config/rollup.json"
+Environment="OP_NODE_JWT_SECRET=/data/besachain-op-node/config/jwt-secret.txt"
+
+ExecStart=/usr/local/bin/op-node \
+    --l1=http://localhost:8545 \
+    --l2=http://localhost:9551 \
+    --rollup.config=/data/besachain-op-node/config/rollup.json \
+    --rpc.addr=0.0.0.0 \
+    --rpc.port=9545 \
+    --rpc.admin=true \
+    --rpc.admin-addr=0.0.0.0 \
+    --rpc.admin-port=9645 \
+    --sequencer.enabled \
+    --sequencer.l1-confs=0 \
+    --p2p.disabled \
+    --metrics.enabled \
+    --metrics.addr=0.0.0.0 \
+    --metrics.port=7300 \
+    --authrpc.addr=0.0.0.0 \
+    --authrpc.port=9551 \
+    --authrpc.jwt-secret=/data/besachain-op-node/config/jwt-secret.txt \
+    --plasma.enabled=false \
+    --verifier.l1-confs=0 \
+    --l1-trust-rpc \
+    --l1.rpckind=basic
+
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=besachain-op-node
+
+# Resource limits for 250ms block time
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
