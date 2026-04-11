@@ -239,3 +239,4 @@ docs/api/generated/
 .fusebox/
 .dynamodb/
 secrets/
+deploy/validator-keys/

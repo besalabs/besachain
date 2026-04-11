@@ -1,0 +1,98 @@
+{
+  "config": {
+    "chainId": 14440,
+    "homesteadBlock": 0,
+    "eip150Block": 0,
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "byzantiumBlock": 0,
+    "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0,
+    "muirGlacierBlock": 0,
+    "berlinBlock": 0,
+    "londonBlock": 0,
+    "arrowGlacierBlock": 0,
+    "grayGlacierBlock": 0,
+    "mergeNetsplitBlock": 0,
+    "ramanujanBlock": 0,
+    "nielsBlock": 0,
+    "mirrorSyncBlock": 0,
+    "brunoBlock": 0,
+    "eulerBlock": 0,
+    "gibbsBlock": 0,
+    "nanoBlock": 0,
+    "moranBlock": 0,
+    "planckBlock": 0,
+    "lubanBlock": 0,
+    "platoBlock": 0,
+    "hertzBlock": 0,
+    "hertzfixBlock": 0,
+    "shanghaiTime": 0,
+    "keplerTime": 0,
+    "feynmanTime": 0,
+    "feynmanFixTime": 0,
+    "cancunTime": 0,
+    "haberTime": 0,
+    "haberFixTime": 0,
+    "bohrTime": 0,
+    "pascalTime": 0,
+    "pragueTime": 0,
+    "lorentzTime": 0,
+    "maxwellTime": 0,
+    "fermiTime": 0,
+    "osakaTime": 0,
+    "mendelTime": 0,
+    "bpo1Time": 0,
+    "bpo2Time": 0,
+    "parlia": {},
+    "blobSchedule": {
+      "cancun": {
+        "target": 3,
+        "max": 6,
+        "baseFeeUpdateFraction": 3338477
+      },
+      "prague": {
+        "target": 6,
+        "max": 9,
+        "baseFeeUpdateFraction": 5007716
+      },
+      "osaka": {
+        "target": 6,
+        "max": 9,
+        "baseFeeUpdateFraction": 5007716
+      },
+      "bpo1": {
+        "target": 10,
+        "max": 15,
+        "baseFeeUpdateFraction": 8346193
+      },
+      "bpo2": {
+        "target": 14,
+        "max": 21,
+        "baseFeeUpdateFraction": 11684671
+      }
+    }
+  },
+  "nonce": "0x0",
+  "timestamp": "0x0",
+  "extraData": "0x000000000000000000000000000000000000000000000000000000000000000007ea646728edbfaf665d1884894f53c2be2dd6093e3084b8577bec36b6d85233b4bb7e507449b6b391b14de6832ecc6dc6e0506f89e0d3f6de6605c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "gasLimit": "0x8F0D180",
+  "difficulty": "0x1",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "alloc": {
+    "0x3Bc15a38575afdBe77C3e20632BB22F1c0B8d686": {
+      "balance": "0x0d3c21bcecceda1000000"
+    },
+    "0x07eA646728edbFaf665d1884894F53C2bE2dD609": {
+      "balance": "0x021e19e0c9bab2400000"
+    },
+    "0x3e3084b8577bec36B6d85233b4bB7e507449B6B3": {
+      "balance": "0x021e19e0c9bab2400000"
+    },
+    "0x91b14DE6832Ecc6dc6e0506F89e0d3f6DE6605C0": {
+      "balance": "0x021e19e0c9bab2400000"
+    }
+  }
+}
