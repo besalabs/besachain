@@ -1,182 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 10, 10, 10;
-  --background-end-rgb: 10, 10, 10;
+  --background: #050507;
+  --foreground: #ffffff;
+  --emerald: #00ff9d;
+  --cyan: #00d4ff;
+  --violet: #8b5cf6;
+  --amber: #f59e0b;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-[#050507] text-white;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background: #0a0a0a;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+/* RainbowKit customization */
+[data-rk] {
+  --rk-colors-accentColor: #00ff9d;
+  --rk-colors-accentColorForeground: #000000;
+  --rk-colors-modalBackground: #0a0a0f;
+  --rk-colors-modalText: #ffffff;
+  --rk-colors-modalTextSecondary: #9ca3af;
+  --rk-colors-profileForeground: #0a0a0f;
+  --rk-colors-profileBackground: #1a1a24;
+  --rk-colors-selectedOptionBorder: #00ff9d;
+  --rk-colors-connectButtonBackground: #1a1a24;
+  --rk-colors-connectButtonBackgroundError: #ff494a;
+  --rk-colors-connectButtonInnerBackground: #0a0a0f;
+  --rk-colors-connectButtonText: #ffffff;
+  --rk-colors-connectButtonTextError: #ffffff;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  background: #050507;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: rgba(0, 255, 157, 0.3);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Range input styling */
-input[type='range'] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-input[type='range']::-webkit-slider-runnable-track {
-  background: rgba(255, 255, 255, 0.1);
-  height: 8px;
-  border-radius: 4px;
-}
-
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  margin-top: -4px;
-  background: linear-gradient(to right, #8b5cf6, #ec4899);
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  border: 2px solid #0a0a0a;
-}
-
-input[type='range']::-moz-range-track {
-  background: rgba(255, 255, 255, 0.1);
-  height: 8px;
-  border-radius: 4px;
-}
-
-input[type='range']::-moz-range-thumb {
-  background: linear-gradient(to right, #8b5cf6, #ec4899);
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  border: 2px solid #0a0a0a;
-}
-
-/* Number input - hide arrows */
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type='number'] {
-  -moz-appearance: textfield;
-}
-
-/* Animations */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* RainbowKit custom overrides */
-[data-rk] {
-  --rk-colors-accentColor: #8b5cf6;
-  --rk-colors-accentColorForeground: #ffffff;
-  --rk-colors-modalBackground: #0a0a0a;
-  --rk-colors-modalBorder: rgba(255, 255, 255, 0.1);
-  --rk-colors-modalText: #ffffff;
-  --rk-colors-modalTextSecondary: rgba(255, 255, 255, 0.6);
-  --rk-radii-actionButton: 16px;
-  --rk-radii-connectButton: 16px;
-  --rk-radii-modal: 24px;
-}
-
-/* Glassmorphism utilities */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-strong {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(to right, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Gradient border */
-.gradient-border {
-  position: relative;
-}
-
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(to right, #8b5cf6, #ec4899);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* Focus ring for accessibility */
-*:focus-visible {
-  outline: 2px solid #8b5cf6;
-  outline-offset: 2px;
+  background: rgba(0, 255, 157, 0.5);
 }
 
 /* Selection */
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(0, 255, 157, 0.3);
   color: white;
+}
+
+/* Animations */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #00ff9d 0%, #00d4ff 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

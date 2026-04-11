@@ -1,0 +1,18 @@
+# Dockerfile for static HTML sites (Next.js exported builds)
+FROM nginx:alpine
+
+# Copy static files from dist folder (Next.js export output)
+COPY dist/ /usr/share/nginx/html/
+
+# Create health check endpoint
+RUN echo '<!DOCTYPE html><html><body>OK</body></html>' > /usr/share/nginx/html/health
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

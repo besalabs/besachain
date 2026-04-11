@@ -1,0 +1,40 @@
+# Dockerfile for docs.besachain.com (Documentation Site)
+# Multi-stage build with Node.js + nginx
+
+# Stage 1: Build
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source code
+COPY . .
+
+# Build the documentation site
+RUN npm run build
+
+# Stage 2: Production
+FROM nginx:alpine
+
+# Copy nginx configuration
+COPY deployment/dockerfiles/nginx.docs.conf /etc/nginx/conf.d/default.conf
+
+# Copy built application
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create health check script
+RUN echo '#!/bin/sh\ncurl -f http://localhost:3002/health || exit 1' > /healthcheck.sh && \
+    chmod +x /healthcheck.sh
+
+# Expose port
+EXPOSE 3002
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD /healthcheck.sh
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

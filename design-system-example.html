@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Besa Foundation — Design System Example</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    /* Demo page styles */
+    .demo-section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+    
+    .demo-section__title {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--color-gray-400);
+      margin-bottom: var(--space-8);
+    }
+    
+    .color-swatch {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-3);
+    }
+    
+    .color-swatch__preview {
+      width: 4rem;
+      height: 4rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-gray-200);
+    }
+    
+    .color-swatch__info {
+      font-size: var(--text-sm);
+    }
+    
+    .color-swatch__name {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    
+    .color-swatch__hex {
+      color: var(--color-gray-500);
+      font-family: monospace;
+    }
+    
+    .component-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: flex-start;
+    }
+    
+    .hero-demo {
+      background: linear-gradient(180deg, var(--color-gray-50) 0%, var(--color-white) 100%);
+      padding: var(--space-32) 0 var(--space-24);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-demo::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(5, 150, 105, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -200px;
+      right: -200px;
+      pointer-events: none;
+    }
+    
+    .hero-demo__content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-demo__title {
+      max-width: 18ch;
+      margin-bottom: var(--space-6);
+    }
+    
+    .hero-demo__description {
+      max-width: 55ch;
+      margin-bottom: var(--space-8);
+    }
+    
+    .hero-demo__actions {
+      display: flex;
+      gap: var(--space-4);
+      margin-bottom: var(--space-16);
+    }
+    
+    .hero-demo__image {
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-2xl);
+      overflow: hidden;
+    }
+    
+    .hero-demo__image img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="container">
+      <a href="#" class="navbar__logo">
+        <span class="navbar__logo-icon">B</span>
+        <span>BESA FOUNDATION</span>
+      </a>
+      
+      <nav class="navbar__nav" aria-label="Main navigation">
+        <a href="#" class="navbar__link active">Home</a>
+        <a href="#" class="navbar__link">About</a>
+        <a href="#" class="navbar__link">Impact</a>
+        <a href="#" class="navbar__link">News</a>
+      </nav>
+      
+      <div class="navbar__actions">
+        <a href="#" class="btn btn-ghost">Contact</a>
+        <a href="#" class="btn btn-primary">Donate</a>
+      </div>
+    </div>
+  </header>
+  
+  <main id="main-content">
+    <!-- Hero Section Demo -->
+    <section class="hero-demo">
+      <div class="container hero-demo__content">
+        <span class="eyebrow">Our Mission</span>
+        <h1 class="display hero-demo__title">Empowering Communities Through Technology and Trust</h1>
+        <p class="text-lg hero-demo__description">We leverage blockchain technology and strategic partnerships to create transparent, measurable impact in communities around the world.</p>
+        <div class="hero-demo__actions">
+          <a href="#" class="btn btn-primary btn-lg">Donate Now</a>
+          <a href="#" class="btn btn-secondary btn-lg">Learn About Our Work</a>
+        </div>
+        <div class="hero-demo__image">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&h=675&fit=crop" alt="Community members working together">
+        </div>
+      </div>
+    </section>
+    
+    <!-- Design System Showcase -->
+    <div class="container">
+      
+      <!-- Color Palette -->
+      <section class="demo-section">
+        <h2 class="demo-section__title">Color Palette</h2>
+        
+        <div class="grid grid-2" style="margin-bottom: 2rem;">
+          <div>
+            <h3 class="h5 mb-4">Primary Colors</h3>
+            <div class="color-swatch">
+              <div class="color-swatch__preview" style="background: #0F172A;"></div>
+              <div class="color-swatch__info">
+                <div class="color-swatch__name">Primary</div>
+                <div class="color-swatch__hex">#0F172A</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-swatch__preview" style="background: #1E293B;"></div>
+              <div class="color-swatch__info">
+                <div class="color-swatch__name">Primary Light</div>
+                <div class="color-swatch__hex">#1E293B</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-swatch__preview" style="background: #334155;"></div>
+              <div class="color-swatch__info">
+                <div class="color-swatch__name">Body Text</div>
+                <div class="color-swatch__hex">#334155</div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="h5 mb-4">Accent Colors (Emerald)</h3>
+            <div class="color-swatch">
+              <div class="color-swatch__preview" style="background: #059669;"></div>
+              <div class="color-swatch__info">
+                <div class="color-swatch__name">Accent</div>
+                <div class="color-swatch__hex">#059669</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-swatch__preview" style="background: #D1FAE5;"></div>
+              <div class="color-swatch__info">
+                <div class="color-swatch__name">Accent Light</div>
+                <div class="color-swatch__hex">#D1FAE5</div>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="color-swatch__preview" style="background: #ECFDF5;"></div>
+              <div class="color-swatch__info">
+                <div class="color-swatch__name">Accent Subtle</div>
+                <div class="color-swatch__hex">#ECFDF5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Typography -->
+      <section class="demo-section">
+        <h2 class="demo-section__title">Typography</h2>
+        
+        <div style="margin-bottom: 3rem;">
+          <p class="eyebrow" style="margin-bottom: 1rem;">Display & Headings</p>
+          <p class="display" style="font-size: 3rem;">Display Text (72px)</p>
+          <h1>Heading 1 (48px)</h1>
+          <h2>Heading 2 (36px)</h2>
+          <h3>Heading 3 (24px)</h3>
+          <h4>Heading 4 (20px)</h4>
+        </div>
+        
+        <div style="margin-bottom: 3rem;">
+          <p class="eyebrow" style="margin-bottom: 1rem;">Body Text</p>
+          <p class="text-lg">Body Large — We believe in the power of collective action to create meaningful change in communities around the world.</p>
+          <p>Body — Through our partnerships with local organizations, we have been able to reach millions of people with essential services and life-changing programs.</p>
+          <p class="text-sm">Body Small — Additional information and supporting details appear in this comfortable reading size for longer passages.</p>
+          <p class="text-xs">Caption — LABELS, META DATA, TIMESTAMPS</p>
+        </div>
+        
+        <div>
+          <p class="eyebrow" style="margin-bottom: 1rem;">Specialized</p>
+          <blockquote class="quote">
+            "The work that Besa Foundation has accomplished has transformed our entire community. We are forever grateful for their commitment and vision."
+          </blockquote>
+        </div>
+      </section>
+      
+      <!-- Buttons -->
+      <section class="demo-section">
+        <h2 class="demo-section__title">Buttons</h2>
+        
+        <div class="component-showcase">
+          <button class="btn btn-primary">Primary Button</button>
+          <button class="btn btn-secondary">Secondary Button</button>
+          <button class="btn btn-ghost">Ghost Button</button>
+          <button class="btn btn-primary btn-lg">Large Button</button>
+        </div>
+      </section>
+      
+      <!-- Cards -->
+      <section class="demo-section">
+        <h2 class="demo-section__title">Cards</h2>
+        
+        <div class="grid grid-3">
+          <!-- Impact Card -->
+          <div class="impact-card">
+            <div class="impact-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M2 12h20"/>
+              </svg>
+            </div>
+            <div class="impact-card__stat">2.4M+</div>
+            <div class="impact-card__label">Lives Impacted</div>
+            <p class="impact-card__description">Supporting communities across 12 countries with essential resources.</p>
+          </div>
+          
+          <!-- Impact Card -->
+          <div class="impact-card">
+            <div class="impact-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <div class="impact-card__stat">$47M</div>
+            <div class="impact-card__label">Donated</div>
+            <p class="impact-card__description">Every dollar tracked on-chain for complete transparency.</p>
+          </div>
+          
+          <!-- Impact Card -->
+          <div class="impact-card">
+            <div class="impact-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <div class="impact-card__stat">156</div>
+            <div class="impact-card__label">Projects</div>
+            <p class="impact-card__description">Active initiatives spanning education, health, and sustainability.</p>
+          </div>
+        </div>
+        
+        <div class="grid grid-3" style="margin-top: 2rem;">
+          <!-- Story Card -->
+          <article class="story-card">
+            <div class="story-card__image-wrapper">
+              <img src="https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&h=375&fit=crop" alt="School children" class="story-card__image">
+            </div>
+            <div class="story-card__content">
+              <span class="tag">Education</span>
+              <h3 class="h4" style="margin-bottom: 0.5rem;">Building Schools in Rural Communities</h3>
+              <p class="text-sm" style="margin-bottom: 1rem;">Through our partnership with local leaders, we've constructed 47 schools serving over 12,000 students...</p>
+              <a href="#" class="btn btn-ghost" style="padding-left: 0;">Read full story →</a>
+            </div>
+          </article>
+          
+          <!-- Story Card -->
+          <article class="story-card">
+            <div class="story-card__image-wrapper">
+              <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&h=375&fit=crop" alt="Community healthcare" class="story-card__image">
+            </div>
+            <div class="story-card__content">
+              <span class="tag">Healthcare</span>
+              <h3 class="h4" style="margin-bottom: 0.5rem;">Mobile Clinics Reach Remote Areas</h3>
+              <p class="text-sm" style="margin-bottom: 1rem;">Our mobile healthcare initiative has provided essential medical services to over 500,000 people...</p>
+              <a href="#" class="btn btn-ghost" style="padding-left: 0;">Read full story →</a>
+            </div>
+          </article>
+          
+          <!-- Story Card -->
+          <article class="story-card">
+            <div class="story-card__image-wrapper">
+              <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600&h=375&fit=crop" alt="Sustainable farming" class="story-card__image">
+            </div>
+            <div class="story-card__content">
+              <span class="tag">Sustainability</span>
+              <h3 class="h4" style="margin-bottom: 0.5rem;">Sustainable Agriculture Programs</h3>
+              <p class="text-sm" style="margin-bottom: 1rem;">Training farmers in climate-resilient techniques has improved crop yields by an average of 40%...</p>
+              <a href="#" class="btn btn-ghost" style="padding-left: 0;">Read full story →</a>
+            </div>
+          </article>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+          <!-- Testimonial Card -->
+          <div class="testimonial-card" style="max-width: 600px;">
+            <p class="testimonial-card__quote">The Besa Foundation's commitment to transparency and measurable impact sets them apart. Every dollar is accounted for, and the results speak for themselves.</p>
+            <div class="testimonial-card__author">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Sarah Chen" class="avatar">
+              <div>
+                <div class="font-semibold">Sarah Chen</div>
+                <div class="text-sm text-muted">Impact Researcher, Global Giving Institute</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Forms -->
+      <section class="demo-section">
+        <h2 class="demo-section__title">Forms</h2>
+        
+        <div class="grid grid-2">
+          <div>
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address <span style="color: var(--color-error);">*</span></label>
+              <input type="email" id="email" class="form-input" placeholder="you@example.com">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="name">Full Name</label>
+              <input type="text" id="name" class="form-input" placeholder="John Doe">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="message">Message</label>
+              <textarea id="message" class="form-input" rows="4" placeholder="How can we help?"></textarea>
+            </div>
+          </div>
+          
+          <div>
+            <div class="newsletter">
+              <h3 class="h4" style="margin-bottom: 0.5rem;">Stay Updated</h3>
+              <p class="text-sm" style="margin-bottom: 1.25rem; color: var(--color-gray-600);">Get the latest stories and impact reports delivered to your inbox.</p>
+              <form class="newsletter-inline">
+                <input type="email" class="form-input" placeholder="Enter your email">
+                <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Subscribe</button>
+              </form>
+              <p class="text-xs" style="margin-top: 0.75rem; color: var(--color-gray-500);">No spam, ever. Unsubscribe anytime.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Donation Block -->
+      <section class="demo-section">
+        <h2 class="demo-section__title">Donation CTA</h2>
+        
+        <div class="donation-block">
+          <h2 class="donation-block__title">Support Our Mission</h2>
+          <p class="donation-block__description">Your contribution helps us build a better future for communities around the world. Every donation is tracked on-chain for complete transparency.</p>
+          
+          <div class="donation-amounts">
+            <button class="donation-amount">$25</button>
+            <button class="donation-amount selected">$50</button>
+            <button class="donation-amount">$100</button>
+            <button class="donation-amount">$250</button>
+            <div class="donation-amount" style="display: flex; align-items: center; gap: 0.5rem;">
+              <span>$</span>
+              <input type="number" placeholder="Custom" style="background: transparent; border: none; color: white; width: 70px; outline: none;">
+            </div>
+          </div>
+          
+          <button class="btn btn-primary btn-lg" style="width: 100%; max-width: 400px; margin-bottom: 1rem;">Donate Now</button>
+          
+          <p style="font-size: var(--text-sm); color: var(--color-gray-400); display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Secure donation · Tax deductible · 100% transparent
+          </p>
+        </div>
+      </section>
+      
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="#" class="footer__logo">
+            <span class="navbar__logo-icon">B</span>
+            <span>BESA FOUNDATION</span>
+          </a>
+          <p class="footer__description">Building a better future through technology and trust. We believe in the power of transparent, measurable impact.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                <rect x="2" y="9" width="4" height="12"/>
+                <circle cx="4" cy="4" r="2"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="footer__column-title">About</h4>
+          <nav aria-label="Footer about">
+            <a href="#" class="footer__link">Our Story</a>
+            <a href="#" class="footer__link">Team</a>
+            <a href="#" class="footer__link">Careers</a>
+            <a href="#" class="footer__link">Press</a>
+          </nav>
+        </div>
+        
+        <div>
+          <h4 class="footer__column-title">Programs</h4>
+          <nav aria-label="Footer programs">
+            <a href="#" class="footer__link">Education</a>
+            <a href="#" class="footer__link">Healthcare</a>
+            <a href="#" class="footer__link">Climate</a>
+            <a href="#" class="footer__link">Emergency Relief</a>
+          </nav>
+        </div>
+        
+        <div>
+          <h4 class="footer__column-title">Resources</h4>
+          <nav aria-label="Footer resources">
+            <a href="#" class="footer__link">Blog</a>
+            <a href="#" class="footer__link">Reports</a>
+            <a href="#" class="footer__link">Financials</a>
+            <a href="#" class="footer__link">Contact</a>
+            <a href="#" class="footer__link">FAQ</a>
+          </nav>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+        <p class="footer__copyright">© 2026 Besa Foundation. Registered 501(c)(3) nonprofit.</p>
+        <div class="footer__legal">
+          <a href="#" class="footer__legal-link">Privacy Policy</a>
+          <a href="#" class="footer__legal-link">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Navbar scroll effect
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        navbar.classList.add('navbar--scrolled');
+      } else {
+        navbar.classList.remove('navbar--scrolled');
+      }
+    });
+    
+    // Donation amount selection
+    const donationAmounts = document.querySelectorAll('.donation-amount');
+    donationAmounts.forEach(amount => {
+      amount.addEventListener('click', () => {
+        donationAmounts.forEach(a => a.classList.remove('selected'));
+        amount.classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>

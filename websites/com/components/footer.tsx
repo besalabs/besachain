@@ -1,160 +1,71 @@
-"use client"
+'use client';
 
-import { Github, Twitter, MessageCircle, FileText } from "lucide-react"
-
-const footerLinks = {
-  ecosystem: [
-    { name: "BesaChain Foundation", href: "https://besachain.org" },
-    { name: "Besa DEX", href: "https://dex.besachain.com" },
-    { name: "Block Explorer", href: "https://scan.besachain.com" },
-    { name: "Documentation", href: "https://docs.besachain.com" },
-  ],
-  developers: [
-    { name: "Developer Portal", href: "https://docs.besachain.com" },
-    { name: "GitHub", href: "https://github.com/besachain" },
-    { name: "SDK", href: "https://docs.besachain.com/sdk" },
-    { name: "Bug Bounty", href: "https://bugbounty.besachain.com" },
-  ],
-  community: [
-    { name: "Discord", href: "https://discord.gg/besachain" },
-    { name: "Twitter", href: "https://twitter.com/besachain" },
-    { name: "Telegram", href: "https://t.me/besachain" },
-    { name: "Forum", href: "https://forum.besachain.com" },
-  ],
-  resources: [
-    { name: "Whitepaper", href: "https://besachain.org/whitepaper" },
-    { name: "Brand Kit", href: "https://besachain.org/brand" },
-    { name: "Press Kit", href: "https://besachain.org/press" },
-    { name: "Careers", href: "https://besachain.org/careers" },
-  ],
-}
-
-const socialLinks = [
-  { icon: Twitter, href: "https://twitter.com/besachain", label: "Twitter" },
-  { icon: Github, href: "https://github.com/besachain", label: "GitHub" },
-  { icon: MessageCircle, href: "https://discord.gg/besachain", label: "Discord" },
-  { icon: FileText, href: "https://docs.besachain.com", label: "Documentation" },
-]
+import { Github, Twitter, MessageCircle } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-black/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
-          {/* Logo & Description */}
-          <div className="col-span-2">
-            <a href="#" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan to-accent-purple flex items-center justify-center">
-                <span className="text-background font-bold text-lg">B</span>
+    <footer className="bg-[#050507] border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid md:grid-cols-4 gap-8 mb-12">
+          {/* Brand */}
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center">
+                <span className="text-black font-bold text-sm">B</span>
               </div>
-              <span className="text-xl font-bold">
-                Besa<span className="gradient-text">Chain</span>
+              <span className="text-white font-semibold text-lg">
+                Besa<span className="text-emerald-400">Chain</span>
               </span>
-            </a>
-            <p className="text-gray-400 text-sm mb-6 max-w-xs">
-              The world's first post-quantum EVM blockchain. Built for the AI era with 200K+ TPS.
+            </div>
+            <p className="text-gray-500 text-sm max-w-sm mb-4">
+              Post-Quantum EVM blockchain. 450ms finality. 10,500+ TPS. 
+              Built for the quantum era.
             </p>
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-accent-cyan hover:bg-white/10 transition-all"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+            <div className="flex gap-4">
+              <a href="https://github.com/besalabs" className="text-gray-500 hover:text-white transition-colors">
+                <Github className="w-5 h-5" />
+              </a>
+              <a href="https://twitter.com/besachain" className="text-gray-500 hover:text-white transition-colors">
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a href="https://discord.gg/besachain" className="text-gray-500 hover:text-white transition-colors">
+                <MessageCircle className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
           {/* Links */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm">Ecosystem</h4>
-            <ul className="space-y-3">
-              {footerLinks.ecosystem.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-gray-400 hover:text-accent-cyan transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
+            <h4 className="text-white font-semibold mb-4">Network</h4>
+            <ul className="space-y-2 text-sm text-gray-500">
+              <li><a href="https://besachain.com" className="hover:text-emerald-400 transition-colors">Mainnet</a></li>
+              <li><a href="https://rpc.besachain.com" className="hover:text-emerald-400 transition-colors">RPC Endpoint</a></li>
+              <li><a href="https://explorer.besachain.com" className="hover:text-emerald-400 transition-colors">Explorer</a></li>
+              <li><a href="https://dex.besachain.com" className="hover:text-emerald-400 transition-colors">DEX</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4 text-sm">Developers</h4>
-            <ul className="space-y-3">
-              {footerLinks.developers.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-gray-400 hover:text-accent-cyan transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-4 text-sm">Community</h4>
-            <ul className="space-y-3">
-              {footerLinks.community.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-gray-400 hover:text-accent-cyan transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-4 text-sm">Resources</h4>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-gray-400 hover:text-accent-cyan transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
+            <h4 className="text-white font-semibold mb-4">Resources</h4>
+            <ul className="space-y-2 text-sm text-gray-500">
+              <li><a href="https://docs.besachain.com" className="hover:text-emerald-400 transition-colors">Documentation</a></li>
+              <li><a href="https://github.com/besalabs" className="hover:text-emerald-400 transition-colors">GitHub</a></li>
+              <li><a href="https://besachain.org" className="hover:text-emerald-400 transition-colors">Foundation</a></li>
+              <li><a href="https://besachain.org/grants" className="hover:text-emerald-400 transition-colors">Grants</a></li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-gray-500">
-            © 2026 BesaChain Foundation. All rights reserved.
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-600 text-sm">
+            © 2026 BesaChain. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-              Terms of Service
-            </a>
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
-              Cookie Policy
-            </a>
+          <div className="flex gap-6 text-sm text-gray-600">
+            <span>Chain 1444 (L1)</span>
+            <span>Chain 1445 (L2)</span>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }

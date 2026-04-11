@@ -1,0 +1,158 @@
+services:
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: besachain-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-http.conf:/etc/nginx/nginx.conf:ro
+      - ./empty.conf:/etc/nginx/conf.d/default.conf:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - besachain-com
+      - besachain-dex
+      - besachain-docs
+      - besachain-faucet
+      - besachain-bridge
+      - besachain-org
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # besachain.com - Main Blockchain Site (Port 3000)
+  besachain-com:
+    build:
+      context: ./sites/besachain-com
+      dockerfile: ../../dockerfiles/Dockerfile.static
+    container_name: besachain-com
+    expose:
+      - "80"
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # dex.besachain.com - DEX Application (Port 3001)
+  besachain-dex:
+    build:
+      context: ./sites/dex
+      dockerfile: ../../dockerfiles/Dockerfile.static
+    container_name: besachain-dex
+    expose:
+      - "80"
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # docs.besachain.com - Documentation Site (Port 3002)
+  besachain-docs:
+    build:
+      context: ./sites/docs
+      dockerfile: ../../dockerfiles/Dockerfile.static
+    container_name: besachain-docs
+    expose:
+      - "80"
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # faucet.besachain.com - Faucet Application (Port 3003)
+  besachain-faucet:
+    build:
+      context: ./sites/faucet
+      dockerfile: ../../dockerfiles/Dockerfile.static
+    container_name: besachain-faucet
+    expose:
+      - "80"
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # bridge.besachain.com - Bridge Application (Port 3004)
+  besachain-bridge:
+    build:
+      context: ./sites/bridge
+      dockerfile: ../../dockerfiles/Dockerfile.static
+    container_name: besachain-bridge
+    expose:
+      - "80"
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # besachain.org - Foundation Site (Port 3005)
+  besachain-org:
+    build:
+      context: ./sites/besachain-org
+      dockerfile: ../../dockerfiles/Dockerfile.static
+    container_name: besachain-org
+    expose:
+      - "80"
+    networks:
+      - besachain-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Certbot for SSL certificate management
+  certbot:
+    image: certbot/certbot:latest
+    container_name: besachain-certbot
+    volumes:
+      - ./ssl/certbot/conf:/etc/letsencrypt
+      - ./ssl/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - besachain-network
+
+networks:
+  besachain-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  nginx_logs:
+    driver: local

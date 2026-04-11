@@ -1,73 +1,94 @@
-# Besa Chain
+# BesaChain Smart Contracts
 
-**Post-quantum EVM for the AI era.**
+BesaChain is an L1+L2 blockchain ecosystem with high gas limits for maximum throughput.
 
-[![X](https://img.shields.io/badge/X-@BesaLabs-black)](https://x.com/BesaLabs)
-[![Website](https://img.shields.io/badge/Website-besachain.com-blue)](https://besachain.com)
+## Chain Configuration
 
----
+| Parameter | L1 (BSC Geth) | L2 (op-geth) |
+|-----------|---------------|--------------|
+| Chain ID | 1444 | 1445 |
+| Gas Limit | 1,000,000,000 (1B) | 100,000,000 (100M) |
+| RPC Endpoint | http://54.235.85.175:8545 | http://54.235.85.175:9545 |
+| Consensus | Clique (PoA) | Optimism Rollup |
+| Block Time | 1 second | 1 second |
 
-## Overview
+## Contract Architecture
 
-Besa Chain is a dual-layer EVM blockchain optimized for autonomous AI agent transactions:
+### Core Contracts
 
-- **200,000+ TPS sustained** (L1+L2 combined)
-- **ML-DSA quantum precompile** (NIST FIPS 204)
-- **EIP-7702-based account abstraction** for agent-native onboarding
-- **Full EVM compatibility** — deploy existing Solidity contracts without modification
+```
+besachain/
+├── contracts/
+│   ├── token/
+│   │   └── BesaToken.sol          # BESA governance token
+│   ├── dex/
+│   │   ├── BesaFactory.sol        # DEX factory
+│   │   ├── BesaPair.sol           # Trading pair
+│   │   └── BesaERC20.sol          # LP token base
+│   ├── bridge/
+│   │   └── BesaBridgeRelayer.sol  # L1<->L2 bridge
+│   └── ...
+└── scripts/
+    ├── deploy-besachain.sh        # Deployment script
+    └── measure-tps.sh             # TPS measurement
+```
 
-**Besa** (Albanian): The sacred promise that cannot be broken.
+### Token Distribution (BESA)
 
----
+| Allocation | Amount | Percentage |
+|------------|--------|------------|
+| Treasury | 400M | 40% |
+| Ecosystem Fund | 350M | 35% |
+| Liquidity Mining | 250M | 25% |
+| **Total Supply** | **1B** | **100%** |
 
-## Why Besa?
+## Quick Start
 
-The autonomous agent economy requires infrastructure that doesn't exist:
+### Check Chain Status
 
-1. **Throughput:** Billions of daily agent transactions need 100,000+ TPS
-2. **Quantum Security:** ECDSA will be broken by quantum computers; ML-DSA is NIST-standardized post-quantum cryptography
-3. **Agent Onboarding:** AI agents need programmatic key management and gas abstraction
+```bash
+# L1 Status
+curl -X POST http://54.235.85.175:8545 \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}'
 
----
+# L2 Status
+curl -X POST http://54.235.85.175:9545 \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}'
+```
 
-## Architecture
+### Measure TPS
 
-| Layer | Throughput | Block Time | Key Features |
-|-------|-----------|------------|--------------|
-| **Besa L1** | ~10,500 TPS | 0.45s | Parlia PoSA, ML-DSA precompile (0x0120), BLS finality |
-| **Besa L2** | ~200,000+ TPS | 0.25s | OP Stack Fourier, near-zero gas (~0.001 Gwei) |
+```bash
+cd /Users/senton/besachain
+./scripts/measure-tps.sh
+```
 
----
+### Deploy Contracts
 
-## Documentation
+```bash
+cd /Users/senton/besachain
+./scripts/deploy-besachain.sh
+```
 
-- [Whitepaper](./WHITEPAPER.md) — Technical architecture and research
-- [Launch Strategy](./docs/2026-04-06-besa-chain-launch-strategy-design.md) — Community building and exchange roadmap
-- [Critical Review](./docs/2026-04-07-besa-whitepaper-CRITICAL-REVIEW.md) — Self-assessment and improvement areas
+## TPS Capacity
 
----
+| Chain | Gas Limit | Theoretical TPS (Simple Transfer) |
+|-------|-----------|-----------------------------------|
+| L1 | 1,000,000,000 | ~47,619 TPS |
+| L2 | 100,000,000 | ~4,762 TPS |
 
-## Quick Links
+*Based on 21,000 gas per simple transfer*
 
-- **Website:** [besachain.com](https://besachain.com)
-- **Foundation:** [besachain.org](https://besachain.org)
-- **X/Twitter:** [@BesaLabs](https://x.com/BesaLabs)
-- **Contact:** besachain.team@gmail.com
+## Differences from LibyaChain/LYDX
 
----
-
-## Status
-
-- **Testnet:** In development
-- **Mainnet:** Planned
-- **Whitepaper:** Draft — under review
-
----
+1. **Chain IDs**: Updated to 1444 (L1) and 1445 (L2)
+2. **Gas Limits**: Optimized for 1B (L1) and 100M (L2)
+3. **Naming**: LYDX -> BESA, LibyaChain -> BesaChain
+4. **Bridge**: Configured for L1<->L2 communication
+5. **Token**: Same distribution, different name/symbol
 
 ## License
 
-This project is licensed under the MIT License — see individual repositories for details.
-
----
-
-**Note:** Besa Chain is an independent project. While it shares technological heritage with research in high-throughput EVM chains, it operates as a separate entity with its own genesis, validator set, and governance.
+MIT
